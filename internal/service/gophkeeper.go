@@ -21,10 +21,10 @@ type GophKeeperService struct {
 }
 
 // NewGophKeeperService создает новый экземпляр сервиса
-func NewGophKeeperService(repo storage.Repository, jwtSecret, encryptionKey string) *GophKeeperService {
+func NewGophKeeperService(repo storage.Repository, jwtSecret string, jwtExpiration time.Duration, encryptionKey string) *GophKeeperService {
 	return &GophKeeperService{
 		repo:      repo,
-		jwtMgr:    auth.NewJWTManager(jwtSecret),
+		jwtMgr:    auth.NewJWTManager(jwtSecret, jwtExpiration),
 		encryptor: crypto.NewEncryptor(encryptionKey),
 	}
 }
@@ -35,14 +35,14 @@ func (s *GophKeeperService) Register(ctx context.Context, req *models.RegisterRe
 		return nil, fmt.Errorf("database not configured")
 	}
 
-	existingUser, _ := s.repo.GetUserByUsername(ctx, req.Username)
-	if existingUser != nil {
-		return nil, fmt.Errorf("username already exists")
-	}
-
-	existingUser, _ = s.repo.GetUserByEmail(ctx, req.Email)
-	if existingUser != nil {
-		return nil, fmt.Errorf("email already exists")
+	existingUser, err := s.repo.GetUserByUsernameOrEmail(ctx, req.Username, req.Email)
+	if err == nil && existingUser != nil {
+		if existingUser.Username == req.Username {
+			return nil, fmt.Errorf("username already exists")
+		}
+		if existingUser.Email == req.Email {
+			return nil, fmt.Errorf("email already exists")
+		}
 	}
 
 	hashedPassword, err := auth.HashPassword(req.Password)
@@ -196,11 +196,9 @@ func (s *GophKeeperService) GetUserSecretData(ctx context.Context, userID uuid.U
 		if data.Encrypted {
 			decryptedMetadata, err := s.encryptor.Decrypt(data.Metadata)
 			if err != nil {
-				// Если не удалось расшифровать, оставляем зашифрованными
-				metadata = "[ENCRYPTED]"
-			} else {
-				metadata = decryptedMetadata
+				return nil, fmt.Errorf("failed to decrypt metadata for data ID %s: %w", data.ID, err)
 			}
+			metadata = decryptedMetadata
 		}
 
 		response = append(response, &models.SecretDataResponse{
@@ -253,10 +251,9 @@ func (s *GophKeeperService) UpdateSecretData(ctx context.Context, userID uuid.UU
 	if encrypted {
 		decryptedMetadata, err := s.encryptor.Decrypt(metadata)
 		if err != nil {
-			responseMetadata = "[ENCRYPTED]"
-		} else {
-			responseMetadata = decryptedMetadata
+			return nil, fmt.Errorf("failed to decrypt metadata: %w", err)
 		}
+		responseMetadata = decryptedMetadata
 	}
 
 	return &models.SecretDataResponse{

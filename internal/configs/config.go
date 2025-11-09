@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/caarlos0/env/v6"
 )
@@ -17,6 +18,7 @@ type JSONConfig struct {
 	DatabaseDSN       string `json:"database_dsn"`
 	EnableHTTPS       bool   `json:"enable_https"`
 	JWTSecret         string `json:"jwt_secret"`
+	JWTExpiration     string `json:"jwt_expiration"` // Парсится как duration (например, "24h")
 	EncryptionKey     string `json:"encryption_key"`
 }
 
@@ -42,13 +44,14 @@ func loadJSONConfig(filename string) (*JSONConfig, error) {
 // Config содержит настройки приложения
 // Может быть загружен из переменных окружения, флагов командной строки или JSON файла
 type Config struct {
-	ServerAddress     string `env:"SERVER_ADDRESS" envDefault:"localhost:8080"`      // Адрес HTTP сервера
-	GRPCServerAddress string `env:"GRPC_SERVER_ADDRESS" envDefault:"localhost:8081"` // Адрес gRPC сервера
-	DatabaseDSN       string `env:"DATABASE_DSN" envDefault:""`                      // DSN для подключения к БД
-	EnableHTTPS       bool   `env:"ENABLE_HTTPS" envDefault:"false"`                 // Включить HTTPS
-	JWTSecret         string `env:"JWT_SECRET" envDefault:"your-secret-key"`         // Секретный ключ для JWT
-	EncryptionKey     string `env:"ENCRYPTION_KEY" envDefault:"your-encryption-key"` // Ключ для шифрования данных
-	ConfigFile        string `env:"CONFIG" envDefault:""`                            // Путь к JSON файлу конфигурации
+	ServerAddress     string        `env:"SERVER_ADDRESS" envDefault:"localhost:8080"`      // Адрес HTTP сервера
+	GRPCServerAddress string        `env:"GRPC_SERVER_ADDRESS" envDefault:"localhost:8081"` // Адрес gRPC сервера
+	DatabaseDSN       string        `env:"DATABASE_DSN" envDefault:""`                      // DSN для подключения к БД
+	EnableHTTPS       bool          `env:"ENABLE_HTTPS" envDefault:"false"`                 // Включить HTTPS
+	JWTSecret         string        `env:"JWT_SECRET"`                                      // Секретный ключ для JWT (обязательно)
+	JWTExpiration     time.Duration `env:"JWT_EXPIRATION" envDefault:"24h"`                 // Время жизни JWT токена
+	EncryptionKey     string        `env:"ENCRYPTION_KEY"`                                  // Ключ для шифрования данных (обязательно)
+	ConfigFile        string        `env:"CONFIG" envDefault:""`                            // Путь к JSON файлу конфигурации
 }
 
 // LoadConfig используется для загрузки конфига
@@ -64,6 +67,7 @@ func LoadConfig() (*Config, error) {
 	databaseFlag := flag.String("d", "", "Database connection string")
 	enableHTTPSFlag := flag.Bool("s", false, "Enable HTTPS")
 	jwtSecretFlag := flag.String("jwt", "", "JWT secret key")
+	jwtExpirationFlag := flag.String("jwt-exp", "", "JWT expiration duration (e.g., 24h, 1h30m)")
 	encryptionKeyFlag := flag.String("enc", "", "Encryption key")
 	configFlag := flag.String("c", "", "Path to JSON config file")
 	configFlagLong := flag.String("config", "", "Path to JSON config file")
@@ -96,6 +100,11 @@ func LoadConfig() (*Config, error) {
 		if jsonConfig.JWTSecret != "" {
 			cfg.JWTSecret = jsonConfig.JWTSecret
 		}
+		if jsonConfig.JWTExpiration != "" {
+			if parsed, err := time.ParseDuration(jsonConfig.JWTExpiration); err == nil {
+				cfg.JWTExpiration = parsed
+			}
+		}
 		if jsonConfig.EncryptionKey != "" {
 			cfg.EncryptionKey = jsonConfig.EncryptionKey
 		}
@@ -115,6 +124,11 @@ func LoadConfig() (*Config, error) {
 	if *jwtSecretFlag != "" {
 		cfg.JWTSecret = *jwtSecretFlag
 	}
+	if *jwtExpirationFlag != "" {
+		if parsed, err := time.ParseDuration(*jwtExpirationFlag); err == nil {
+			cfg.JWTExpiration = parsed
+		}
+	}
 	if *encryptionKeyFlag != "" {
 		cfg.EncryptionKey = *encryptionKeyFlag
 	}
@@ -128,6 +142,14 @@ func LoadConfig() (*Config, error) {
 
 	if serverAddr == "" {
 		return nil, fmt.Errorf("адрес сервера не предоставлен")
+	}
+
+	if cfg.JWTSecret == "" {
+		return nil, fmt.Errorf("JWT_SECRET is required but not configured. Please set JWT_SECRET environment variable or use -jwt flag")
+	}
+
+	if cfg.EncryptionKey == "" {
+		return nil, fmt.Errorf("ENCRYPTION_KEY is required but not configured. Please set ENCRYPTION_KEY environment variable or use -enc flag")
 	}
 
 	return cfg, nil

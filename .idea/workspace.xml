@@ -4,24 +4,18 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="925d0668-265b-4c42-8f50-f6384f861019" name="Changes" comment=".gitignore">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/client/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/auth/jwt.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/auth/jwt_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/auth/password.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/configs/config.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/crypto/encryption.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/crypto/encryption_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/models/data.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/server/http.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/service/gophkeeper.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/service/gophkeeper_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/storage/repository.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/001_init.sql" beforeDir="false" />
+    <list default="true" id="925d0668-265b-4c42-8f50-f6384f861019" name="Changes" comment="первая версия проекта&#10;&#10;(cherry picked from commit b22389937ffc1522a4f5fcf5f55beac3729a08c4)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/client/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/client/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/auth/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/auth/jwt.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/auth/jwt_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/auth/jwt_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/configs/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/configs/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/models/data.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/data.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/gophkeeper.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/gophkeeper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/gophkeeper_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/gophkeeper_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/storage/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/storage/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/001_init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/001_init.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -57,26 +51,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.GoLinterPluginOnboarding&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.GoLinterPluginStorageMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/work/go-final-project/go-project-final&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.GoLinterPluginOnboarding": "true",
+    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "#1 on feture/project",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/work/go-final-project/go-project-final",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\work\go-final-project\go-project-final" />
@@ -108,7 +102,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="develop" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -117,7 +123,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="первая версия проекта" />
     <MESSAGE value=".gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value=".gitignore" />
+    <MESSAGE value="delete all" />
+    <MESSAGE value="первая версия проекта&#10;&#10;(cherry picked from commit b22389937ffc1522a4f5fcf5f55beac3729a08c4)" />
+    <option name="LAST_COMMIT_MESSAGE" value="первая версия проекта&#10;&#10;(cherry picked from commit b22389937ffc1522a4f5fcf5f55beac3729a08c4)" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -127,7 +135,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/internal/configs/config.go</url>
-          <line>73</line>
+          <line>77</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

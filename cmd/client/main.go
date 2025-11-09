@@ -197,7 +197,9 @@ func (c *Client) saveConfig(token string) {
 	}
 
 	configFile := fmt.Sprintf("%s/%s", homeDir, ConfigFileName)
-	os.WriteFile(configFile, jsonData, 0600)
+	if err := os.WriteFile(configFile, jsonData, 0600); err != nil {
+		fmt.Printf("Warning: failed to save config: %v\n", err)
+	}
 }
 
 // loadConfig загружает конфигурацию

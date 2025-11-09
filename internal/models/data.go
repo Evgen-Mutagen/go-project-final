@@ -23,7 +23,7 @@ type SecretData struct {
 	Type        DataType  `json:"type" db:"type"`
 	Title       string    `json:"title" db:"title"`
 	Description string    `json:"description" db:"description"`
-	Metadata    string    `json:"metadata" db:"metadata"` // JSON строка с дополнительными данными
+	Metadata    string    `json:"metadata" db:"metadata"` // JSON строка с дополнительными данными (хранится как JSONB в БД)
 	Encrypted   bool      `json:"encrypted" db:"encrypted"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`

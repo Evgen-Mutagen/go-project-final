@@ -15,6 +15,7 @@ type Repository interface {
 	CreateUser(ctx context.Context, user *models.User) error
 	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
 	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
+	GetUserByUsernameOrEmail(ctx context.Context, username, email string) (*models.User, error)
 	GetUserByID(ctx context.Context, id uuid.UUID) (*models.User, error)
 
 	CreateSecretData(ctx context.Context, data *models.SecretData) error
@@ -65,6 +66,23 @@ func (r *PostgresRepository) GetUserByUsername(ctx context.Context, username str
 func (r *PostgresRepository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	query := `SELECT id, username, email, password_hash, created_at, updated_at FROM users WHERE email = $1`
 	row := r.db.QueryRow(ctx, query, email)
+
+	user := &models.User{}
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// GetUserByUsernameOrEmail получает пользователя по имени или email (для проверки существования)
+func (r *PostgresRepository) GetUserByUsernameOrEmail(ctx context.Context, username, email string) (*models.User, error) {
+	query := `SELECT id, username, email, password_hash, created_at, updated_at FROM users WHERE username = $1 OR email = $2`
+	row := r.db.QueryRow(ctx, query, username, email)
 
 	user := &models.User{}
 	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)

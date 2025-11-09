@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gophkeeper/internal/models"
@@ -27,6 +28,14 @@ func (m *MockRepository) GetUserByUsername(ctx context.Context, username string)
 
 func (m *MockRepository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	args := m.Called(ctx, email)
+	return args.Get(0).(*models.User), args.Error(1)
+}
+
+func (m *MockRepository) GetUserByUsernameOrEmail(ctx context.Context, username, email string) (*models.User, error) {
+	args := m.Called(ctx, username, email)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).(*models.User), args.Error(1)
 }
 
@@ -62,7 +71,7 @@ func (m *MockRepository) DeleteSecretData(ctx context.Context, id uuid.UUID, use
 
 func TestGophKeeperService_Register(t *testing.T) {
 	mockRepo := new(MockRepository)
-	service := NewGophKeeperService(mockRepo, "test-secret", "test-encryption-key")
+	service := NewGophKeeperService(mockRepo, "test-secret", 24*time.Hour, "test-encryption-key")
 
 	ctx := context.Background()
 	req := &models.RegisterRequest{
@@ -72,8 +81,7 @@ func TestGophKeeperService_Register(t *testing.T) {
 	}
 
 	// Настраиваем мок
-	mockRepo.On("GetUserByUsername", ctx, "testuser").Return((*models.User)(nil), assert.AnError)
-	mockRepo.On("GetUserByEmail", ctx, "test@example.com").Return((*models.User)(nil), assert.AnError)
+	mockRepo.On("GetUserByUsernameOrEmail", ctx, "testuser", "test@example.com").Return((*models.User)(nil), assert.AnError)
 	mockRepo.On("CreateUser", ctx, mock.AnythingOfType("*models.User")).Return(nil)
 
 	// Выполняем тест

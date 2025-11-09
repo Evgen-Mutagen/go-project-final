@@ -2,6 +2,7 @@ package auth
 
 import (
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -10,7 +11,7 @@ import (
 
 func TestJWTManager(t *testing.T) {
 	secretKey := "test-secret-key"
-	jwtMgr := NewJWTManager(secretKey)
+	jwtMgr := NewJWTManager(secretKey, 24*time.Hour)
 
 	userID := uuid.New()
 	username := "testuser"
@@ -31,7 +32,7 @@ func TestJWTManager(t *testing.T) {
 	assert.Error(t, err)
 
 	// Тест с токеном другого секрета
-	otherJwtMgr := NewJWTManager("other-secret")
+	otherJwtMgr := NewJWTManager("other-secret", 24*time.Hour)
 	otherToken, _ := otherJwtMgr.GenerateToken(userID, username)
 	_, err = jwtMgr.ValidateToken(otherToken)
 	assert.Error(t, err)

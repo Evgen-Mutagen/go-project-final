@@ -29,21 +29,20 @@ func main() {
 	}
 	defer logger.Sync()
 
-	var repo storage.Repository
-	if cfg.DatabaseDSN != "" {
-		pool, err := pgxpool.New(context.Background(), cfg.DatabaseDSN)
-		if err != nil {
-			logger.Fatal("Failed to connect to database", zap.Error(err))
-		}
-		defer pool.Close()
-
-		repo = storage.NewPostgresRepository(pool)
-		logger.Info("Connected to PostgreSQL database")
-	} else {
-		logger.Warn("No database configured, using in-memory storage")
+	if cfg.DatabaseDSN == "" {
+		logger.Fatal("DatabaseDSN is required but not configured. Please set DATABASE_DSN environment variable or use -d flag")
 	}
 
-	gophKeeperService := service.NewGophKeeperService(repo, cfg.JWTSecret, cfg.EncryptionKey)
+	pool, err := pgxpool.New(context.Background(), cfg.DatabaseDSN)
+	if err != nil {
+		logger.Fatal("Failed to connect to database", zap.Error(err))
+	}
+	defer pool.Close()
+
+	repo := storage.NewPostgresRepository(pool)
+	logger.Info("Connected to PostgreSQL database")
+
+	gophKeeperService := service.NewGophKeeperService(repo, cfg.JWTSecret, cfg.JWTExpiration, cfg.EncryptionKey)
 
 	httpServer := server.NewHTTPServer(gophKeeperService, logger)
 	router := httpServer.SetupRoutes()

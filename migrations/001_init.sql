@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS secret_data (
     type VARCHAR(50) NOT NULL CHECK (type IN ('login_password', 'text', 'binary', 'bank_card')),
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    metadata TEXT NOT NULL,
+    metadata JSONB NOT NULL,
     encrypted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS secret_data (
 CREATE INDEX IF NOT EXISTS idx_secret_data_user_id ON secret_data(user_id);
 CREATE INDEX IF NOT EXISTS idx_secret_data_type ON secret_data(type);
 CREATE INDEX IF NOT EXISTS idx_secret_data_created_at ON secret_data(created_at);
+CREATE INDEX IF NOT EXISTS idx_secret_data_metadata_gin ON secret_data USING GIN (metadata);
 
 -- Создание функции для автоматического обновления updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()

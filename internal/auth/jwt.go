@@ -22,13 +22,15 @@ type Claims struct {
 
 // JWTManager управляет JWT токенами
 type JWTManager struct {
-	secretKey string
+	secretKey  string
+	expiration time.Duration
 }
 
 // NewJWTManager создает новый JWT менеджер
-func NewJWTManager(secretKey string) *JWTManager {
+func NewJWTManager(secretKey string, expiration time.Duration) *JWTManager {
 	return &JWTManager{
-		secretKey: secretKey,
+		secretKey:  secretKey,
+		expiration: expiration,
 	}
 }
 
@@ -38,7 +40,7 @@ func (j *JWTManager) GenerateToken(userID uuid.UUID, username string) (string, e
 		UserID:   userID,
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(j.expiration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
